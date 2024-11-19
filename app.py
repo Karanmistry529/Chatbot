@@ -10,23 +10,11 @@ def home():
 # Route 2: Webhook for Dialogflow
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    req = request.get_json()
-    intent_name = req.get('queryResult', {}).get('intent', {}).get('displayName')
-
-    if intent_name == "Employee Details":
-        # Extract the employee name from the request
-        employee_name = req.get('queryResult', {}).get('parameters', {}).get('Employee_name', 'Unknown')
-
-        # Example response: You can replace this with data from your database
-        employee_data = {
-            "John": "John is a Project Manager and is currently active.",
-            "Jane": "Jane is a Site Engineer and is on leave.",
-        }
-        response_text = employee_data.get(employee_name, f"Sorry, I couldn't find details for {employee_name}.")
-
-        return jsonify({"fulfillmentText": response_text})
-
-    return jsonify({"fulfillmentText": "I'm sorry, I can't handle that request."})
+    req = request.get_json(silent=True, force=True)  # Parse JSON from Dialogflow
+    response = {
+        "fulfillmentText": "Webhook response from Flask!"
+    }
+    return jsonify(response)
 
 
 
